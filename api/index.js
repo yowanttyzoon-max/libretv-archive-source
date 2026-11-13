@@ -44,15 +44,27 @@ function pickVideos(meta) {
   return vids;
 }
 
+
+function encodeArchivePath(path) {
+  return String(path)
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+}
+
 function buildPlayUrl(id, vids) {
   if (!vids.length) return '';
+
   return vids
-    .map(
-      (v) =>
-        `Archive$https://archive.org/download/${encodeURIComponent(id)}/${encodeURIComponent(v.name)}`
-    )
+    .map((v) => {
+      const archiveId = encodeURIComponent(id);
+      const filePath = encodeArchivePath(v.name);
+
+      return `Archive$https://archive.org/download/${archiveId}/${filePath}`;
+    })
     .join('#');
 }
+
 
 function cleanText(s) {
   if (!s) return '';
